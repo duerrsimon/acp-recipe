@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="w-full">
     <Menu />
     <Basket />
     <Recipes />
@@ -11,12 +11,16 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    selectedItems() {
+      return this.$store.state.selectedIngredients
+    },
+  },
   methods: {
     async getPanier() {
       await this.$store.dispatch('getPanier')
     },
   },
-
   mounted() {
     this.getPanier()
   },

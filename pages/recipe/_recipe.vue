@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="w-full">
     <!-- <Menu /> -->
     <div class="relative">
       <div class="absolute top-0 left-0 z-50 ml-4 mt-4">
@@ -23,8 +23,9 @@
         </NuxtLink>
       </div>
       <div
+        v-if="recipie"
         class="relative bg-cover bg-center z-0 bg-mulegreen"
-        :class="[{ 'h-64': recipie.img != '' }, 'h-36']"
+        :class="[{ 'h-64': recipie.image != '' }, 'h-36']"
         :style="'background-image: url(' + recipie.image.httpUrl + ')'"
       >
         <div
@@ -59,7 +60,7 @@
         </div>
       </div>
       <div class="relative -mt-12 rounded-3xl pt-4 px-6 bg-white z-10 h-64">
-        <p class="font-semibold my-2 text-2xl">Poêlée de navets</p>
+        <p class="font-semibold my-2 text-2xl" v-html="recipie.title"></p>
         <div class="flex space-x-2 text-gray-400 text-lg items-center">
           <!-- svg  -->
           <svg
@@ -92,21 +93,28 @@
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
             />
           </svg>
-          <span v-for="cat in recipie.categories" :key="cat">{{ cat }}</span>
+          <span v-for="cat in recipie.category" :key="cat.id">{{
+            cat.title
+          }}</span>
         </div>
         <div class="mt-3">
-          <p class="text-xs text-gray-400">
-            avec Chou kale, Epinards, Radis, Navet
+          <p class="text-xs text-gray-400" v-if="CommonIngredients.length > 0">
+            {{ $t('with') }}
+            <span v-for="id in CommonIngredients" :key="'ing' + id">
+              {{ ingredients[id] }}
+            </span>
           </p>
         </div>
-
-        <!-- component -->
+        <div>
+          {{ recipie.hint }}
+        </div>
         <div class="w-full flex">
           <div class="custom-number-input h-10 w-1/2 mx-auto mt-4">
             <label
               for="custom-input-number"
               class="w-full text-gray-700 text-sm font-semibold hidden"
-              >Number of persons
+            >
+              {{ $t('numberofpersons') }}
             </label>
             <div
               class="
@@ -160,7 +168,7 @@
                   name="custom-input-number"
                   v-model="nPersons"
                 />
-                <span class="text-xs -mt-4">Personnes</span>
+                <span class="text-xs -mt-4">{{ $t('persons') }}</span>
               </div>
 
               <button
@@ -191,7 +199,7 @@
               }"
               @click="show = 'ingredients'"
             >
-              Ingredients
+              {{ $t('ingredients') }}
             </button>
             <button
               class="w-1/2 px-4 py-2 -mb-px text-black rounded-t"
@@ -200,16 +208,9 @@
               }"
               @click="show = 'recipe'"
             >
-              Recette
+              {{ $t('instructions') }}
             </button>
           </div>
-
-          <!-- Tab Contents
-                        <div id="tab-contents">
-                          <div id="first" class="p-4">
-                            First tab
-                          </div>
-                        </div> -->
         </div>
         <div class="relative mt-16 mx-8" v-if="show == 'ingredients'">
           <div v-for="(group, i) in recipie.ingredients" :key="group.title + i">
@@ -223,17 +224,24 @@
               >
                 <td class="w-1/3">
                   <span>{{
-                    (ingredient.quantity / recipie.defaultPersons) * nPersons
+                    (parseFloat(ingredient.quantity) /
+                      parseInt(recipie.defaultPersons)) *
+                    nPersons
                   }}</span>
                   <span>{{ ingredient.unit.abbreviation }}</span>
                 </td>
-                <td class="w-2/3 flex items-center space-x-1">
-                  <IngredientIcon
-                    :id="ingredient.id"
-                    :title="ingredient.title"
-                  /><span class="w-full">{{
-                    ingredient.ingredient.title
-                  }}</span>
+                <td class="w-2/3">
+                  <div class="flex items-center space-x-1">
+                    <IngredientIcon
+                      :id="ingredient.id"
+                      :title="ingredient.title"
+                    /><span
+                      class="w-full"
+                      v-html="ingredient.ingredient.title"
+                    ></span>
+                  </div>
+
+                  <span>{{ ingredient.hint }}</span>
                 </td>
               </tr>
             </table>
@@ -258,11 +266,12 @@
               >
                 <div class="flex items-center mb-2">
                   <div class="bg-darkmulegreen rounded-full h-8 w-8"></div>
-                  <div class="flex-1 ml-4 font-medium">{{ step.title }}</div>
+                  <div
+                    class="flex-1 ml-4 font-medium"
+                    v-html="step.title"
+                  ></div>
                 </div>
-                <div class="ml-12 text-sm">
-                  {{ step.desc }}
-                </div>
+                <div class="ml-12 text-sm" v-html="step.desc"></div>
                 <div class="mt-3 relative ml-12">
                   <CookingTimer
                     :title="step.title"
@@ -274,6 +283,33 @@
             </ul>
           </div>
         </div>
+        <h3 class="text-xl font-medium my-4">Related recipes</h3>
+        <div class="flex w-full pb-10 hide-scroll-bar mt-4">
+          <div class="w-1/2">
+            <SinglePreview
+              :recipe="recipe"
+              :slug="key"
+              v-for="(recipe, key) in recipie.related"
+              :key="key"
+            />
+          </div>
+        </div>
+        <div class="my-6">
+          <!-- <h6 class="font-medium text-sm">Copyright and Info</h6> -->
+          <ul class="text-xs text-gray-800">
+            <li>{{ $t('createdby') }} {{ recipie.creator }}</li>
+            <li>Text <a href="">CC BY SA 4.0</a></li>
+            <li>
+              {{ $t('imageby') }}
+              <a :href="recipie.image.creator_url">{{
+                recipie.image.creator
+              }}</a>
+              {{ $t('licensedunder') }}
+              <a href="">{{ recipie.image.license }}</a>
+            </li>
+          </ul>
+          <p></p>
+        </div>
       </div>
     </div>
   </div>
@@ -282,126 +318,37 @@
 <script>
 /* eslint-disable unicorn/escape-case */
 /* eslint-disable no-useless-escape */
+/* eslint-disable require-await */
 export default {
+  async asyncData({ params, i18n }) {
+    const slug = params.recipe // When calling /abc the slug will be "abc"
+    const recipie = await fetch('http://acp.test/recipes/' + slug + '/').then(
+      (res) => res.json()
+    )
+    console.log(recipie)
+    const ingredientIds = Object.keys(recipie.ingredientIds).map(Number)
+    const ingredients = recipie.ingredientIds
+    const nPersons = recipie.defaultPersons
+    return { slug, recipie, nPersons, ingredientIds, ingredients }
+  },
   data() {
     return {
       show: 'ingredients',
-      recipie: {
-        title: 'Pide avec epinard et tomate',
-        time: '02:00',
-        image: {
-          httpUrl:
-            'http:\/\/acp.test\/site\/assets\/files\/1118\/img_20180329_193144.jpg',
-        },
-        defaultPersons: 4,
-        categories: [],
-        steps: {
-          '1622906750-989-1': {
-            title: 'Prepare the dough',
-            desc: "M\u00e9langer la farine avec la levure s\u00e8che, le sel et le sucre. Ajoutez l'eau et incorporez-la pour former une belle boule de p\u00e2te souple. Vers la fin, ajoutez l'huile et p\u00e9trissez jusqu'\u00e0 ce que la p\u00e2te ressemble \u00e0 un lobe d'oreille. Laissez la p\u00e2te lever couverte dans un endroit chaud pendant 1,30 h.",
-            time: '01:30',
-          },
-          '1622908586-5762-1': {
-            title: 'Fourrage',
-            desc: "Pr\u00e9parez la farce en coupant d'abord en petits morceaux la partie blanche de l'oignon de printemps et l'ail. Rincez et s\u00e9chez les \u00e9pinards.\n\nFaites chauffer un peu d'huile dans une po\u00eale et ajoutez l'oignon\u00a0 et l'ail et faites-les frire pendant quelques minutes. Ajouter les \u00e9pinards et poursuivre la cuisson jusqu'\u00e0 ce qu'ils soient fl\u00e9tris. Retirer du feu et ajouter le sel et le poivre.\n\n<p>Hacher grossi\u00e8rement la tomate (par exemple, en deux ou en quatre) et la m\u00e9langer avec les \u00e9pinards, les oignons, le gruy\u00e8re r\u00e2p\u00e9, la feta \u00e9miett\u00e9e et le paprika.<\/p>",
-            time: null,
-          },
-          '1622908946-2577-1': {
-            title: 'Pate',
-            desc: 'Sur une surface farin\u00e9e, p\u00e9trissez la p\u00e2te pendant un court moment et faites 4 morceaux. Formez des boules de p\u00e2te et laissez-les lever \u00e0 nouveau pendant 10 minutes.',
-            time: '00:10',
-          },
-          '1622909214-4758-1': {
-            title: 'Montage',
-            desc: "Pr\u00e9chauffez le four \u00e0 220 C\n\nUtilisez un rouleau \u00e0 p\u00e2tisserie pour aplatir les boules de p\u00e2te \u00e0 environ 30 x 15 cm. \u00c9talez la garniture en laissant un espace d'environ 1,5 \u00e0 2 cm sur les bords. Repliez la p\u00e2te non recouverte, passez-la \u00e0 l'\u0153uf et ajoutez \u00e9ventuellement quelques graines de s\u00e9same.\n\n<p>Faites cuire sur une plaque \u00e0 p\u00e2tisserie pendant environ 12 minutes dans la partie inf\u00e9rieure du four.<\/p>",
-            time: '00:12',
-          },
-        },
-        ingredients: {
-          '1622906254-0702-1': {
-            title: 'Pate',
-            ingredientList: {
-              '1622906261-8615-1': {
-                ingredient: { id: 1128, title: 'Flour' },
-                quantity: '500',
-                unit: { abbreviation: 'g' },
-              },
-              '1622906315-3831-1': {
-                ingredient: { id: 1129, title: 'Water' },
-                quantity: '300',
-                unit: { abbreviation: null },
-              },
-              '1622906336-4178-1': {
-                ingredient: { id: 1131, title: 'Sugar' },
-                quantity: '1',
-                unit: { abbreviation: 'cuil. \u00e0 caf\u00e9' },
-              },
-              '1622906356-3846-1': {
-                ingredient: { id: 1093, title: 'salt' },
-                quantity: '1.5',
-                unit: { abbreviation: 'cuil. \u00e0 caf\u00e9' },
-              },
-              '1622906374-4752-1': {
-                ingredient: { id: 1132, title: 'Olive oil' },
-                quantity: '4',
-                unit: { abbreviation: null },
-              },
-            },
-          },
-          '1622906428-9302-1': {
-            title: 'Fourrage',
-            ingredientList: {
-              '1622906578-3696-1': {
-                ingredient: { id: 1141, title: 'Feta' },
-                quantity: '1',
-                unit: { abbreviation: null },
-              },
-              '1622906591-1627-1': {
-                ingredient: { id: 1143, title: 'Gruyere' },
-                quantity: '50',
-                unit: { abbreviation: 'g' },
-              },
-              '1622906610-3059-1': {
-                ingredient: { id: 1144, title: 'Spring onion' },
-                quantity: '1',
-                unit: { abbreviation: 'pce' },
-              },
-              '1622906655-7891-1': {
-                ingredient: { id: 1145, title: 'Tomato' },
-                quantity: '4',
-                unit: { abbreviation: 'pce' },
-              },
-              '1622906699-9445-1': {
-                ingredient: { id: 1055, title: 'Sel &amp; Poivre' },
-                quantity: null,
-                unit: [],
-              },
-              '1622906708-0237-1': {
-                ingredient: { id: 1054, title: 'Paprika moulu' },
-                quantity: '0.25',
-                unit: { abbreviation: 'cuil. \u00e0 caf\u00e9' },
-              },
-              '1622908769-0753-1': {
-                ingredient: { id: 1084, title: 'garlic' },
-                quantity: '1',
-                unit: { abbreviation: 'clove' },
-              },
-              '1622909421-7338-1': {
-                ingredient: { id: 1155, title: 'Sesame' },
-                quantity: '1',
-                unit: { abbreviation: null },
-              },
-              '1622909443-7835-1': {
-                ingredient: { id: 1156, title: 'Egg' },
-                quantity: '1',
-                unit: { abbreviation: 'pce' },
-              },
-            },
-          },
-        },
-      },
       nPersons: null,
     }
+  },
+  computed: {
+    selectedItems() {
+      return this.$store.state.selectedIngredients
+    },
+    CommonIngredients() {
+      // return this.selectedItems.some((item) =>
+      //   this.ingredientIds.includes(item)
+      // )
+      return this.ingredientIds.filter((item) =>
+        this.selectedItems.includes(item)
+      )
+    },
   },
   methods: {
     formatTime(time) {

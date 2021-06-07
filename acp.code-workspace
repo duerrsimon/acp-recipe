@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../c/laragon/www/acp/site/templates"
+		}
+	],
+	"remoteAuthority": "wsl+Ubuntu-18.04",
+	"settings": {}
+}

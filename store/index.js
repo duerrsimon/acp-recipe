@@ -3,29 +3,16 @@ export const state = () => ({
   panierModification: null,
   selectedIngredients: [],
   basketIds: [],
+  recipes: null,
 })
 
 export const getters = {}
 
-// export function recursivelyFindProp(o, keyToBeFound) {
-//   const that = this
-//   Object.keys(o).forEach(function (key) {
-//     if (typeof o[key] === 'object') {
-//       that.recursivelyFindProp(o[key], keyToBeFound)
-//     } else {
-//       /* eslint-disable no-lonely-if */
-//       if (key === keyToBeFound) {
-//         state.commit('addSelectedIngredients', o[key])
-//       }
-//     }
-//   })
-// }
-
 export const actions = {
   async getPanier(state) {
-    const res = await this.$axios.get('http://acp.test/paniers/')
-    console.log(state.state.panierModification < res.data.modified)
-    console.log(res.data.modified)
+    const res = await this.$axios.get(
+      'http://acp.test/paniers/' //
+    )
     if (state.state.panierModification < res.data.modified) {
       console.log('updated')
       state.commit('addPanier', res.data)
@@ -35,23 +22,33 @@ export const actions = {
         (item) => ingredients[item].ingredient.id
       )
       state.commit('setSelectedIngredients', ids)
+      state.dispatch('getRecipes')
     }
   },
-  //   async getPanier() {
-  //     const panier = await fetch('http://acp.test/paniers/').then((res) =>
-  //     res.json()
-  //   )
-  //     commit('addPanier', panier)
-  //     return panier
-  //   },
+  async getRecipes(state) {
+    console.log('getRecipes')
+    const res = await this.$axios.get(
+      'http://acp.test/recipe-search/' // this.$i18n.locale
+    )
+    state.commit('setRecipes', res.data)
+  },
+  async updateRecipes(state) {
+    console.log('updateRecipes')
+    const Data = new FormData()
+    Data.set('id', state.state.selectedIngredients)
+    const res = await this.$axios.post('http://acp.test/recipe-search/', Data)
+    state.commit('setRecipes', res.data)
+  },
 }
 
 export const mutations = {
+  setRecipes(state, recipes) {
+    state.recipes = recipes
+  },
   addPanier(state, panier) {
     state.panier = panier
   },
   setPanierDate(state, moddate) {
-    console.log(moddate)
     state.panierModification = moddate
   },
   setSelectedIngredients(state, ids) {

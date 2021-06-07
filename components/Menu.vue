@@ -108,8 +108,8 @@
               "
               >Categories</a
             >
-            <button
-              href="#"
+            <NuxtLink
+              :to="'category/vegetarian'"
               class="
                 flex
                 mt-4
@@ -124,7 +124,7 @@
             >
               <img :src="'icons/' + value + '.png'" alt="" class="h-6 w-6" />
               <span>{{ $t('category.' + key) }}</span>
-            </button>
+            </NuxtLink>
           </div>
           <div class="border-t-2 border-gray-200 px-4 pt-6">
             <a

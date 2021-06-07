@@ -35,15 +35,8 @@
 
 export default {
   data() {
-    return {
-      // selectedItems: [],
-    }
+    return {}
   },
-  // async fetch() {
-  //   this.basket = await fetch('http://acp.test/paniers/').then((res) =>
-  //     res.json()
-  //   )
-  // },
   computed: {
     basket() {
       return this.$store.state.panier
@@ -53,6 +46,9 @@ export default {
     },
   },
   methods: {
+    async updateRecipes() {
+      await this.$store.dispatch('updateRecipes')
+    },
     addOrRemove(value) {
       const index = this.selectedItems.indexOf(value)
       if (index === -1) {
@@ -60,6 +56,7 @@ export default {
       } else {
         this.$store.commit('removeSelectedIngredients', value)
       }
+      this.updateRecipes()
     },
   },
   mounted() {
