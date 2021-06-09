@@ -30,46 +30,6 @@
         :class="{ active: lang === locale }"
         >{{ locale }}
       </nuxt-link>
-      <!-- <button
-        class="
-          inline-flex
-          items-center
-          transition-colors
-          duration-300
-          ease-in
-          focus:outline-none
-          hover:text-green-400
-          focus:text-green-400
-          rounded-l-full
-          px-4
-          py-2
-        "
-        
-        id="grid"
-        @click="switchLang('fr')"
-      >
-        <span>fr</span>
-      </button>
-      <button
-        class="
-          inline-flex
-          items-center
-          transition-colors
-          duration-300
-          ease-in
-          focus:outline-none
-          hover:text-green-400
-          focus:text-green-400
-          rounded-r-full
-          px-4
-          py-2
-        "
-        :class="{ active: lang === 'en' }"
-        id="list"
-        @click="switchLang('en')"
-      >
-        <span>en</span>
-      </button> -->
     </div>
   </div>
 </template>
@@ -77,13 +37,11 @@
 <script>
 export default {
   data() {
-    return {
-      // lang: 'fr',
-    }
+    return {}
   },
-  methods: {
-    switchLang(lang) {
-      this.lang = lang
+  watch: {
+    lang(newLocale, oldLocale) {
+      this.$store.dispatch('updateRecipes')
     },
   },
   computed: {

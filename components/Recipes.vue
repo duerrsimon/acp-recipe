@@ -29,29 +29,7 @@
             :key="recipe[0]"
           />
         </div>
-        <div
-          v-if="filteredRecipes.length == 0"
-          class="
-            text-gray-900
-            font-sm
-            flex flex-col
-            justify-center
-            items-center
-            mx-auto
-          "
-        >
-          <img
-            src="icons/icons8-food-and-wine-100.png"
-            class="opacity-25 w-16 h-16"
-            alt="Add your own recipes"
-          />
-          <div>
-            No recipes found.
-            <a href="" class="text-green-600 hover:underline focus:underline"
-              >Add your own.</a
-            >
-          </div>
-        </div>
+        <NoRecipes v-if="filteredRecipes.length == 0" />
       </div>
     </div>
   </div>
@@ -65,12 +43,15 @@ export default {
   computed: {
     filteredRecipes() {
       const that = this
-      if (this.selectedCat === 'all') {
-        return Object.entries(this.recipes)
+      if (this.recipes !== null) {
+        if (this.selectedCat === 'all') {
+          return Object.entries(this.recipes)
+        }
+        return Object.entries(this.recipes).filter((recipe) =>
+          recipe[1].categoryIds.includes(parseInt(that.selectedCat))
+        )
       }
-      return Object.entries(this.recipes).filter((recipe) =>
-        recipe[1].categoryIds.includes(parseInt(that.selectedCat))
-      )
+      return []
     },
 
     recipes() {

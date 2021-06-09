@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="">
     <!-- <Menu /> -->
     <div class="relative">
       <div class="absolute top-0 left-0 z-50 ml-4 mt-4">
-        <NuxtLink to="/">
+        <NuxtLink :to="localePath('/')">
           <div class="bg-white rounded">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,14 @@
         </div>
       </div>
       <div class="relative -mt-12 rounded-3xl pt-4 px-6 bg-white z-10 h-64">
-        <p class="font-semibold my-2 text-2xl">{{ slug }}</p>
+        <div class="flex font-semibold my-6 space-x-2 text-2xl">
+          <img
+            :src="'/icons/' + categories[slug].icon + '.png'"
+            alt=""
+            class="h-8 w-8"
+          />
+          <span>{{ $t('category.' + categories[slug].key) }}</span>
+        </div>
         <div class="flex flex-col space-y-2">
           <ListPreview
             v-for="(recipe, key) in recipes"
@@ -65,6 +72,38 @@
             :key="key"
             :slug="key"
           />
+          <NoRecipes v-if="recipes.length == 0" />
+        </div>
+
+        <div class="mt-8">
+          <h3 class="font-medium text-xl">{{ $t('othercategories') }}</h3>
+          <div class="flex flex-wrap space-x-2">
+            <NuxtLink
+              :to="localePath('/category/' + slug)"
+              class="
+                flex
+                mt-4
+                font-lg
+                block
+                font-medium
+                text-gray-900
+                hover:text-gray-700
+                space-x-1
+                p-2
+                border border-gray-300
+                rounded
+              "
+              v-for="(value, slug) in categories"
+              :key="slug"
+            >
+              <img
+                :src="'/icons/' + value.icon + '.png'"
+                alt=""
+                class="h-6 w-6"
+              />
+              <span>{{ $t('category.' + value.key) }}</span>
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
@@ -79,12 +118,21 @@ export default {
   async asyncData({ params, i18n }) {
     const slug = params.category // When calling /abc the slug will be "abc"
     const recipes = await fetch(
-      'http://acp.test/categories/' + slug + '/'
+      'http://acp.test/categories/' + slug + '/' + i18n.locale
     ).then((res) => res.json())
     return { slug, recipes }
   },
   data() {
-    return {}
+    return {
+      categories: {
+        vegetarian: { icon: 'icons8-vegetarian-food-100', key: 1033 },
+        vegan: { icon: 'icons8-vegan-food-100', key: 1034 },
+        indian: { icon: 'icons8-naan-100', key: 1035 },
+        asian: { icon: 'icons8-dim-sum-100', key: 1157 },
+        soup: { icon: 'icons8-healthy-food-100', key: 1058 },
+        quick: { icon: 'icons8-taco-100', key: 1158 },
+      },
+    }
   },
   computed: {},
   methods: {},

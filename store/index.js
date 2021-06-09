@@ -9,9 +9,9 @@ export const state = () => ({
 export const getters = {}
 
 export const actions = {
-  async getPanier(state) {
+  async getPanier(state, i18n) {
     const res = await this.$axios.get(
-      'http://acp.test/paniers/' //
+      'http://acp.test/paniers/' + this.$i18n.locale //
     )
     if (state.state.panierModification < res.data.modified) {
       console.log('updated')
@@ -28,7 +28,7 @@ export const actions = {
   async getRecipes(state) {
     console.log('getRecipes')
     const res = await this.$axios.get(
-      'http://acp.test/recipe-search/' // this.$i18n.locale
+      'http://acp.test/recipe-search/' + this.$i18n.locale
     )
     state.commit('setRecipes', res.data)
   },
@@ -36,7 +36,10 @@ export const actions = {
     console.log('updateRecipes')
     const Data = new FormData()
     Data.set('id', state.state.selectedIngredients)
-    const res = await this.$axios.post('http://acp.test/recipe-search/', Data)
+    const res = await this.$axios.post(
+      'http://acp.test/recipe-search/' + this.$i18n.locale,
+      Data
+    )
     state.commit('setRecipes', res.data)
   },
 }

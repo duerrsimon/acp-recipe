@@ -1,6 +1,7 @@
 <template>
   <div class="inline-block">
-    <NuxtLink :to="'/recipe/' + slug">
+    <NuxtLink :to="localePath('/recipe/' + slug)">
+      <!--//:to="'/recipe/' + slug"-->
       <div
         class="
           w-64

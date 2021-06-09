@@ -109,7 +109,7 @@
               >Categories</a
             >
             <NuxtLink
-              :to="'category/vegetarian'"
+              :to="localePath('/category/' + value.key)"
               class="
                 flex
                 mt-4
@@ -119,35 +119,39 @@
                 hover:text-gray-700
                 space-x-4
               "
-              v-for="(value, key) in categories"
-              :key="key"
+              v-for="(value, id) in categories"
+              :key="id"
             >
-              <img :src="'icons/' + value + '.png'" alt="" class="h-6 w-6" />
-              <span>{{ $t('category.' + key) }}</span>
+              <img
+                :src="'/icons/' + value.icon + '.png'"
+                alt=""
+                class="h-6 w-6"
+              />
+              <span>{{ $t('category.' + id) }}</span>
             </NuxtLink>
           </div>
           <div class="border-t-2 border-gray-200 px-4 pt-6">
             <a
-              href="#"
+              href="https://lamule.ch/recettes/"
               class="block font-medium text-gray-900 hover:text-gray-700"
               >{{ $t('contribute') }}</a
             >
             <a
-              href="#"
+              href="https://lamule.ch/"
               class="mt-4 block font-medium text-gray-900 hover:text-gray-700"
               >{{ $t('concept') }}</a
             >
-            <a
+            <!-- <a
               href="#"
               class="mt-4 block font-medium text-gray-900 hover:text-gray-700"
               >{{ $t('myfavorites') }}</a
-            >
+            > -->
           </div>
         </div>
         <div class="relative bg-white">
           <div class="p-4">
             <a
-              href="#"
+              href="https://lamule.ch/paniers/"
               class="
                 block
                 px-3
@@ -165,6 +169,7 @@
             >
           </div>
         </div>
+        <div class="mt-6 text-gray-600 text-xs">Icons by <a href="https://icons8.com/">icon8</a></div>
       </div>
     </transition>
   </div>
@@ -175,12 +180,12 @@ export default {
     return {
       isOpen: false,
       categories: {
-        1033: 'icons8-vegetarian-food-100',
-        1034: 'icons8-vegan-food-100',
-        1035: 'icons8-naan-100',
-        1157: 'icons8-dim-sum-100',
-        1058: 'icons8-healthy-food-100',
-        1158: 'icons8-taco-100',
+        1033: { icon: 'icons8-vegetarian-food-100', key: 'vegetarian' },
+        1034: { icon: 'icons8-vegan-food-100', key: 'vegan' },
+        1035: { icon: 'icons8-naan-100', key: 'indian' },
+        1157: { icon: 'icons8-dim-sum-100', key: 'asian' },
+        1058: { icon: 'icons8-healthy-food-100', key: 'soup' },
+        1158: { icon: 'icons8-taco-100', key: 'quick' },
       },
     }
   },

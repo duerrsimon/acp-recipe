@@ -3,7 +3,7 @@
     <!-- <Menu /> -->
     <div class="relative">
       <div class="absolute top-0 left-0 z-50 ml-4 mt-4">
-        <NuxtLink to="/">
+        <NuxtLink :to="localePath('/')">
           <div class="bg-white rounded">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -283,15 +283,17 @@
             </ul>
           </div>
         </div>
-        <h3 class="text-xl font-medium my-4">Related recipes</h3>
-        <div class="flex w-full pb-10 hide-scroll-bar mt-4">
-          <div class="w-1/2">
-            <SinglePreview
-              :recipe="recipe"
-              :slug="key"
-              v-for="(recipe, key) in recipie.related"
-              :key="key"
-            />
+        <div v-if="recipie.related.length > 0">
+          <h3 class="text-xl font-medium my-4">Related recipes</h3>
+          <div class="flex w-full pb-10 hide-scroll-bar mt-4">
+            <div class="w-1/2">
+              <SinglePreview
+                :recipe="recipe"
+                :slug="key"
+                v-for="(recipe, key) in recipie.related"
+                :key="key"
+              />
+            </div>
           </div>
         </div>
         <div class="my-6">
@@ -322,9 +324,9 @@
 export default {
   async asyncData({ params, i18n }) {
     const slug = params.recipe // When calling /abc the slug will be "abc"
-    const recipie = await fetch('http://acp.test/recipes/' + slug + '/').then(
-      (res) => res.json()
-    )
+    const recipie = await fetch(
+      'http://acp.test/recipes/' + params.recipe + '/' + i18n.locale + '/'
+    ).then((res) => res.json())
     console.log(recipie)
     const ingredientIds = Object.keys(recipie.ingredientIds).map(Number)
     const ingredients = recipie.ingredientIds

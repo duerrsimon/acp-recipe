@@ -78,7 +78,8 @@ export default {
           numberofpersons:"Number of persons",
           createdby:"Created by",
           imageby:"Image by",
-          licensedunder:"licensed under"
+          licensedunder:"licensed under",
+          othercategories:"Other categories",
         },
         fr: {
           panierthisweek: 'Contenu du panier de cette semaine',
@@ -87,7 +88,7 @@ export default {
             'all': 'Toutes',
             '1033': 'Vegetarian',
             '1034': 'Vegan',
-            '1035': 'Indien,',
+            '1035': 'Indien',
             '1157': 'Asiatique ',
             '1058': 'Soupe',
             '1158': 'Rapide',
@@ -105,7 +106,8 @@ export default {
           numberofpersons:"Nombre des personnes",
           createdby:"cree par",
           imageby:"Image de",
-          licensedunder:"license sous"
+          licensedunder:"license sous",
+          othercategories:"Autres categories",
         },
       },
     },
