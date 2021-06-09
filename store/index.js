@@ -11,10 +11,9 @@ export const getters = {}
 export const actions = {
   async getPanier(state, i18n) {
     const res = await this.$axios.get(
-      'http://acp.test/paniers/' + this.$i18n.locale //
+      'https://recipes.simonduerr.eu/paniers/' + this.$i18n.locale //
     )
     if (state.state.panierModification < res.data.modified) {
-      console.log('updated')
       state.commit('addPanier', res.data)
       state.commit('setPanierDate', res.data.modified)
       const ingredients = res.data.ingredientList
@@ -26,18 +25,16 @@ export const actions = {
     }
   },
   async getRecipes(state) {
-    console.log('getRecipes')
     const res = await this.$axios.get(
-      'http://acp.test/recipe-search/' + this.$i18n.locale
+      'https://recipes.simonduerr.eu/recipe-search/' + this.$i18n.locale
     )
     state.commit('setRecipes', res.data)
   },
   async updateRecipes(state) {
-    console.log('updateRecipes')
     const Data = new FormData()
     Data.set('id', state.state.selectedIngredients)
     const res = await this.$axios.post(
-      'http://acp.test/recipe-search/' + this.$i18n.locale,
+      'https://recipes.simonduerr.eu/recipe-search/' + this.$i18n.locale,
       Data
     )
     state.commit('setRecipes', res.data)

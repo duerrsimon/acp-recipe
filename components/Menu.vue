@@ -141,11 +141,6 @@
               class="mt-4 block font-medium text-gray-900 hover:text-gray-700"
               >{{ $t('concept') }}</a
             >
-            <!-- <a
-              href="#"
-              class="mt-4 block font-medium text-gray-900 hover:text-gray-700"
-              >{{ $t('myfavorites') }}</a
-            > -->
           </div>
         </div>
         <div class="relative bg-white">
@@ -169,7 +164,9 @@
             >
           </div>
         </div>
-        <div class="mt-6 text-gray-600 text-xs">Icons by <a href="https://icons8.com/">icon8</a></div>
+        <div class="mt-6 text-gray-600 text-xs mx-auto text-center">
+          Icons by <a href="https://icons8.com/">icon8</a>
+        </div>
       </div>
     </transition>
   </div>

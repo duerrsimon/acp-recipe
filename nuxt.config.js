@@ -7,13 +7,13 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'acp-recipie',
+    title: 'La Mule recettes',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'Recipes for La Mule - cooperative marachaire a Prilly, Vaud' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -128,8 +128,12 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en',
+      lang: 'fr',
+      name: 'La Mule Recettes',
     },
+    icon:{
+      source:'/static/icon.png'
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

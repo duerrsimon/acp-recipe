@@ -167,6 +167,8 @@
                   "
                   name="custom-input-number"
                   v-model="nPersons"
+                  disabled
+                  aria-disabled="true"
                 />
                 <span class="text-xs -mt-4">{{ $t('persons') }}</span>
               </div>
@@ -325,9 +327,12 @@ export default {
   async asyncData({ params, i18n }) {
     const slug = params.recipe // When calling /abc the slug will be "abc"
     const recipie = await fetch(
-      'http://acp.test/recipes/' + params.recipe + '/' + i18n.locale + '/'
+      'https://recipes.simonduerr.eu/recipes/' +
+        params.recipe +
+        '/' +
+        i18n.locale +
+        '/'
     ).then((res) => res.json())
-    console.log(recipie)
     const ingredientIds = Object.keys(recipie.ingredientIds).map(Number)
     const ingredients = recipie.ingredientIds
     const nPersons = recipie.defaultPersons

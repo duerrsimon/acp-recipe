@@ -118,7 +118,7 @@ export default {
   async asyncData({ params, i18n }) {
     const slug = params.category // When calling /abc the slug will be "abc"
     const recipes = await fetch(
-      'http://acp.test/categories/' + slug + '/' + i18n.locale
+      'https://recipes.simonduerr.eu/categories/' + slug + '/' + i18n.locale
     ).then((res) => res.json())
     return { slug, recipes }
   },

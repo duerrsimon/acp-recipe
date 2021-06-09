@@ -1,6 +1,6 @@
 <template>
   <div class="inline-block">
-    <NuxtLink :to="'/recipe/' + slug">
+    <NuxtLink :to="localePath('/recipe/' + slug)">
       <div
         class="
           w-full
@@ -93,7 +93,6 @@ export default {
       return this.$store.state.selectedIngredients
     },
     CommonIngredients() {
-      console.log(this.recipe)
       const ingredientIds = Object.keys(this.recipe.ingredientIds).map(Number)
       return ingredientIds.filter((item) => this.selectedItems.includes(item))
     },
