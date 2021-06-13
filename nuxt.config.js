@@ -23,8 +23,7 @@ export default {
   plugins: ['~/plugins/vue-awesome-countdown.js', {
     src: '~/plugins/vuex-persist',
     mode: 'client'
-  },
-    { ssr: false, src: '~plugins/getPanier.js' }
+  }
 ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -65,7 +64,8 @@ export default {
             '1058': 'Soup',
             '1158': 'Quick',
             '1077': 'Exotic',
-            '1078': 'African'
+            '1078': 'African',
+            '1259':"Apero",
           },
           with: 'with',
           contribute: 'Add a recipe',
@@ -93,7 +93,8 @@ export default {
             '1058': 'Soupe',
             '1158': 'Rapide',
             '1077': 'Exotique',
-            '1078': 'African'
+            '1078': 'African',
+            '1259':"Apero",
           },
           with: 'avec',
           contribute: 'Contribuer une recette',
@@ -130,6 +131,8 @@ export default {
     manifest: {
       lang: 'fr',
       name: 'La Mule Recettes',
+      short_name: 'La Mule',
+      description:"Recettes pour la Mule"
     },
     icon:{
       source:'/static/icon.png'

@@ -55,7 +55,6 @@
         <div class="my-1 px-2">
           <p class="font-semibold my-2" v-html="recipe.title"></p>
           <div class="flex space-x-2 text-gray-400 text-sm items-center">
-            <!-- svg  -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-4 w-4"
@@ -86,15 +85,22 @@
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               />
             </svg>
-            <p v-for="cat in recipe.categoryIds" :key="cat.title">
-              {{ $t('category.' + cat) }}
-            </p>
+            <div
+              v-for="cat in recipe.categoryIds"
+              :key="cat.title"
+              class="inline"
+            >
+              <p>
+                <span>{{ $t('category.' + cat) }} </span>
+                <!-- <span v-if="i + 1 < recipe.categoryIds.length">,</span> -->
+              </p>
+            </div>
           </div>
 
           <div class="mt-3">
             <p
-              class="text-xs text-gray-400"
               v-if="CommonIngredients.length > 0"
+              class="text-xs text-gray-400"
             >
               {{ $t('with') }}
               <span

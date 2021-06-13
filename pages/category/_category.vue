@@ -1,62 +1,30 @@
 <template>
-  <div class="">
-    <!-- <Menu /> -->
-    <div class="relative">
-      <div class="absolute top-0 left-0 z-50 ml-4 mt-4">
-        <NuxtLink :to="localePath('/')">
-          <div class="bg-white rounded">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </div>
-        </NuxtLink>
-      </div>
-      <div class="relative bg-cover bg-center h-36 z-0 bg-mulegreen">
-        <!-- :class="[{ 'h-64': recipie.image != '' }, 'h-36']" -->
-        <!-- :style="'background-image: url(' + recipie.image.httpUrl + ')'" -->
-        <div
-          class="
-            absolute
-            bottom-0
-            right-0
-            m-3
-            bg-white
-            h-8
-            w-8
-            flex
-            items-center
-            justify-center
-            rounded-full
-          "
-        >
+  <div>
+    <Menu />
+    <div class="relative z-0">
+      <!-- <div class="absolute top-0 left-0 z-50 ml-4 mt-4">
+      <NuxtLink :to="localePath('/')">
+        <div class="bg-white rounded">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="#991b1b"
+            class="h-12 w-12"
+            fill="none"
             viewBox="0 0 24 24"
-            stroke="#991b1b"
+            stroke="currentColor"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              d="M15 19l-7-7 7-7"
             />
           </svg>
         </div>
-      </div>
-      <div class="relative -mt-12 rounded-3xl pt-4 px-6 bg-white z-10 h-64">
+      </NuxtLink>
+    </div> -->
+      <!-- <div class="relative bg-cover bg-center h-36 z-0 bg-mulegreen">
+    </div> -->
+      <div class="relative rounded-3xl min-h-screen pt-4 px-6 bg-white z-10">
         <div class="flex font-semibold my-6 space-x-2 text-2xl">
           <img
             :src="'/icons/' + categories[slug].icon + '.png'"
@@ -65,43 +33,44 @@
           />
           <span>{{ $t('category.' + categories[slug].key) }}</span>
         </div>
-        <div class="flex flex-col space-y-2">
-          <ListPreview
-            v-for="(recipe, key) in recipes"
-            :recipe="recipe"
-            :key="key"
-            :slug="key"
-          />
-          <NoRecipes v-if="recipes.length == 0" />
-        </div>
 
-        <div class="mt-8">
+        <ListPreview
+          v-for="(recipe, key) in recipes"
+          :key="key"
+          :recipe="recipe"
+          :slug="key"
+          class="w-full"
+        />
+        <NoRecipes v-if="recipes.length == 0" />
+        <div class="mt-8 mb-24">
           <h3 class="font-medium text-xl">{{ $t('othercategories') }}</h3>
-          <div class="flex flex-wrap space-x-2">
+          <div class="relative mb-12">
             <NuxtLink
+              v-for="(value, slug) in categories"
+              :key="slug"
               :to="localePath('/category/' + slug)"
               class="
-                flex
                 mt-4
                 font-lg
                 block
                 font-medium
                 text-gray-900
                 hover:text-gray-700
-                space-x-1
                 p-2
                 border border-gray-300
                 rounded
+                flex
+                justify-center
               "
-              v-for="(value, slug) in categories"
-              :key="slug"
             >
-              <img
-                :src="'/icons/' + value.icon + '.png'"
-                alt=""
-                class="h-6 w-6"
-              />
-              <span>{{ $t('category.' + value.key) }}</span>
+              <div class="flex space-x-1 mx-auto">
+                <img
+                  :src="'/icons/' + value.icon + '.png'"
+                  alt=""
+                  class="h-6 w-6"
+                />
+                <span>{{ $t('category.' + value.key) }}</span>
+              </div>
             </NuxtLink>
           </div>
         </div>
@@ -115,6 +84,7 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable require-await */
 export default {
+  scrollToTop: true,
   async asyncData({ params, i18n }) {
     const slug = params.category // When calling /abc the slug will be "abc"
     const recipes = await fetch(
@@ -131,12 +101,10 @@ export default {
         asian: { icon: 'icons8-dim-sum-100', key: 1157 },
         soup: { icon: 'icons8-healthy-food-100', key: 1058 },
         quick: { icon: 'icons8-taco-100', key: 1158 },
+        apero: { icon: 'icons8-cheese-100', key: 1259 },
       },
     }
   },
-  computed: {},
-  methods: {},
-  mounted() {},
 }
 </script>
 

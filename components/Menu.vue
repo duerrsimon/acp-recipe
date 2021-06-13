@@ -2,11 +2,11 @@
   <div class="bg-white">
     <div class="flex items-center justify-between py-4 px-4">
       <button
-        class="text-gray-700"
         ref="openButton"
-        @click="open"
         type="button"
+        class="text-gray-700"
         aria-label="Menu"
+        @click="open"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,9 +36,9 @@
     >
       <div v-show="isOpen" class="z-10 fixed inset-0 transition-opacity">
         <div
-          @click="close"
           class="absolute inset-0 bg-black opacity-50"
           tabindex="-1"
+          @click="close"
         ></div>
       </div>
     </transition>
@@ -72,10 +72,10 @@
           >
             <button
               ref="closeButton"
-              @click="close"
               type="button"
               class="text-gray-600 focus:outline-none focus:text-gray-900"
               aria-label="Close"
+              @click="close"
             >
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -84,17 +84,33 @@
               </svg>
             </button>
           </div>
-          <img
-            src="https://d2ibcm5tv7rtdh.cloudfront.net/lamule/logo.png"
-            class="h-24 w-24 my-4 mx-6"
-            alt="Logo"
-          />
+          <img src="/icon.png" class="h-24 w-24 my-4 mx-6" alt="Logo" />
 
           <div class="mt-6 px-4">
             <LanguageToggle />
           </div>
 
           <div class="px-4 pt-4 pb-6">
+            <NuxtLink
+              :to="localePath('/')"
+              class="
+                flex
+                mt-4
+                block
+                font-medium
+                text-gray-900
+                hover:text-gray-700
+                space-x-4
+              "
+            >
+              <img
+                :src="'/icons/idea.png'"
+                alt=""
+                role="presentation"
+                class="h-6 w-6"
+              />
+              <span> {{ $t('suggestions') }}</span>
+            </NuxtLink>
             <a
               href="#"
               class="
@@ -109,6 +125,8 @@
               >Categories</a
             >
             <NuxtLink
+              v-for="(value, id) in categories"
+              :key="id"
               :to="localePath('/category/' + value.key)"
               class="
                 flex
@@ -119,12 +137,11 @@
                 hover:text-gray-700
                 space-x-4
               "
-              v-for="(value, id) in categories"
-              :key="id"
             >
               <img
                 :src="'/icons/' + value.icon + '.png'"
                 alt=""
+                role="presentation"
                 class="h-6 w-6"
               />
               <span>{{ $t('category.' + id) }}</span>
@@ -165,7 +182,15 @@
           </div>
         </div>
         <div class="mt-6 text-gray-600 text-xs mx-auto text-center">
-          Icons by <a href="https://icons8.com/">icon8</a>
+          <span> Icons by <a href="https://icons8.com/">icon8</a></span> <br />
+        </div>
+        <div class="mt-2 text-gray-600 text-xs mx-auto text-center">
+          <span>
+            Alarm sound CC BY 3.0<a
+              href="https://freesound.org/people/kwahmah_02/"
+              >kwahmah_02</a
+            ></span
+          >
         </div>
       </div>
     </transition>
@@ -183,8 +208,21 @@ export default {
         1157: { icon: 'icons8-dim-sum-100', key: 'asian' },
         1058: { icon: 'icons8-healthy-food-100', key: 'soup' },
         1158: { icon: 'icons8-taco-100', key: 'quick' },
+        1259: { icon: 'icons8-cheese-100', key: 'apero' },
       },
     }
+  },
+  watch: {
+    isOpen: {
+      immediate: true,
+      handler(isOpen) {
+        if (isOpen) {
+          document.body.style.setProperty('overflow', 'hidden')
+        } else {
+          document.body.style.removeProperty('overflow')
+        }
+      },
+    },
   },
   methods: {
     open() {
@@ -198,18 +236,6 @@ export default {
       this.$nextTick(() => {
         this.$refs.openButton.focus()
       })
-    },
-  },
-  watch: {
-    isOpen: {
-      immediate: true,
-      handler(isOpen) {
-        if (isOpen) {
-          document.body.style.setProperty('overflow', 'hidden')
-        } else {
-          document.body.style.removeProperty('overflow')
-        }
-      },
     },
   },
 }

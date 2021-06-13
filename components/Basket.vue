@@ -1,12 +1,11 @@
 <template>
   <div class="mt-8 px-4">
     <h2 class="font-bold text-lg">{{ $t('panierthisweek') }}</h2>
-    <div class="mt-2 flex flex-wrap text-sm" v-if="basket && selectedItems">
+    <div v-if="basket && selectedItems" class="mt-2 flex flex-wrap text-sm">
       <button
         v-for="item in basket.ingredientList"
         :key="item.ingredient.id"
         class="m-1 text-white p-2 rounded-lg leading-none flex items-center"
-        @click="addOrRemove(item.ingredient.id)"
         :class="[
           {
             'bg-darkmulegreen opacity-100': selectedItems.includes(
@@ -15,6 +14,7 @@
           },
           'bg-gray-600 opacity-50',
         ]"
+        @click="addOrRemove(item.ingredient.id)"
       >
         {{ item.ingredient.title }}
         <span
@@ -31,8 +31,6 @@
 </template>
 
 <script>
-// import { mapMutations } from 'vuex'
-
 export default {
   data() {
     return {}
@@ -58,9 +56,6 @@ export default {
       }
       this.updateRecipes()
     },
-  },
-  mounted() {
-    // this.recursivelyFindProp(this.basket, 'id')
   },
 }
 </script>

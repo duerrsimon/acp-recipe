@@ -3,7 +3,7 @@
     <!-- <Menu /> -->
     <div class="relative">
       <div class="absolute top-0 left-0 z-50 ml-4 mt-4">
-        <NuxtLink :to="localePath('/')">
+        <button @click="goBack()">
           <div class="bg-white rounded">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -20,13 +20,13 @@
               />
             </svg>
           </div>
-        </NuxtLink>
+        </button>
       </div>
       <div
-        v-if="recipie"
+        v-if="recipe"
         class="relative bg-cover bg-center z-0 bg-mulegreen"
-        :class="[{ 'h-64': recipie.image != '' }, 'h-36']"
-        :style="'background-image: url(' + recipie.image.httpUrl + ')'"
+        :class="[{ 'h-64': recipe.image != '' }, 'h-36']"
+        :style="'background-image: url(' + recipe.image.httpUrl + ')'"
       >
         <div
           class="
@@ -60,7 +60,7 @@
         </div>
       </div>
       <div class="relative -mt-12 rounded-3xl pt-4 px-6 bg-white z-10 h-64">
-        <p class="font-semibold my-2 text-2xl" v-html="recipie.title"></p>
+        <p class="font-semibold my-2 text-2xl" v-html="recipe.title"></p>
         <div class="flex space-x-2 text-gray-400 text-lg items-center">
           <!-- svg  -->
           <svg
@@ -77,7 +77,7 @@
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p>{{ formatTime(recipie.time) }}</p>
+          <p>{{ formatTime(recipe.time) }}</p>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,20 +93,20 @@
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
             />
           </svg>
-          <span v-for="cat in recipie.category" :key="cat.id">{{
+          <span v-for="cat in recipe.category" :key="cat.id">{{
             cat.title
           }}</span>
         </div>
         <div class="mt-3">
-          <p class="text-xs text-gray-400" v-if="CommonIngredients.length > 0">
+          <p v-if="CommonIngredients.length > 0" class="text-xs text-gray-400">
             {{ $t('with') }}
             <span v-for="id in CommonIngredients" :key="'ing' + id">
               {{ ingredients[id] }}
             </span>
           </p>
         </div>
-        <div>
-          {{ recipie.hint }}
+        <div class="text-base">
+          {{ recipe.hint }}
         </div>
         <div class="w-full flex">
           <div class="custom-number-input h-10 w-1/2 mx-auto mt-4">
@@ -146,7 +146,11 @@
               </button>
               <div class="flex flex-col space-y-1">
                 <input
+                  v-model="nPersons"
                   type="number"
+                  name="custom-input-number"
+                  disabled
+                  aria-disabled="true"
                   class="
                     outline-none
                     w-8
@@ -165,10 +169,6 @@
                     m-0
                     p-0
                   "
-                  name="custom-input-number"
-                  v-model="nPersons"
-                  disabled
-                  aria-disabled="true"
                 />
                 <span class="text-xs -mt-4">{{ $t('persons') }}</span>
               </div>
@@ -192,12 +192,12 @@
         </div>
 
         <div class="rounded mt-8 mb-7">
-          <!-- Tabs -->
           <div class="inline-flex space-x-4 w-full px-1 pt-2">
             <button
               class="w-1/2 px-4 py-2 text-gray-800 rounded-t"
               :class="{
-                'border-b-2 border-darkmulegreen': show == 'ingredients',
+                'border-b-2 border-darkmulegreen focus:outline-none':
+                  show == 'ingredients',
               }"
               @click="show = 'ingredients'"
             >
@@ -206,7 +206,8 @@
             <button
               class="w-1/2 px-4 py-2 -mb-px text-black rounded-t"
               :class="{
-                'border-b-2 border-darkmulegreen': show == 'recipe',
+                'border-b-2 border-darkmulegreen focus:outline-none':
+                  show == 'recipe',
               }"
               @click="show = 'recipe'"
             >
@@ -214,20 +215,20 @@
             </button>
           </div>
         </div>
-        <div class="relative mt-16 mx-8" v-if="show == 'ingredients'">
-          <div v-for="(group, i) in recipie.ingredients" :key="group.title + i">
+        <div v-if="show == 'ingredients'" class="relative mt-16">
+          <div v-for="(group, i) in recipe.ingredients" :key="group.title + i">
             <h2 class="font-medium my-3 text-xl">{{ group.title }}</h2>
 
             <table class="w-full mx-auto text-lg">
               <tr
-                v-for="(ingredient, i) in group.ingredientList"
-                :key="group.title + '_' + ingredient.ingredient.title + i"
+                v-for="(ingredient, j) in group.ingredientList"
+                :key="group.title + '_' + ingredient.ingredient.title + j"
                 class="w-full"
               >
                 <td class="w-1/3">
                   <span>{{
                     (parseFloat(ingredient.quantity) /
-                      parseInt(recipie.defaultPersons)) *
+                      parseInt(recipe.defaultPersons)) *
                     nPersons
                   }}</span>
                   <span>{{ ingredient.unit.abbreviation }}</span>
@@ -243,14 +244,14 @@
                     ></span>
                   </div>
 
-                  <span>{{ ingredient.hint }}</span>
+                  <span class="text-xs">{{ ingredient.hint }}</span>
                 </td>
               </tr>
             </table>
           </div>
         </div>
         <div class="pb-8">
-          <div class="relative" v-if="show == 'recipe'">
+          <div v-if="show == 'recipe'" class="relative">
             <div
               class="
                 border-r-2 border-darkmulegreen border-dotted
@@ -262,9 +263,9 @@
             ></div>
             <ul class="list-none mb-8 p-0">
               <li
-                class="mb-4"
-                v-for="(step, i) in recipie.steps"
+                v-for="(step, i) in recipe.steps"
                 :key="step.title + i"
+                class="mb-4"
               >
                 <div class="flex items-center mb-2">
                   <div class="bg-darkmulegreen rounded-full h-8 w-8"></div>
@@ -276,40 +277,37 @@
                 <div class="ml-12 text-sm" v-html="step.desc"></div>
                 <div class="mt-3 relative ml-12">
                   <CookingTimer
+                    v-if="step.time"
                     :title="step.title"
                     :time="step.time"
-                    v-if="step.time"
                   />
                 </div>
               </li>
             </ul>
           </div>
         </div>
-        <div v-if="recipie.related.length > 0">
+        <div v-if="nRelated != 0">
           <h3 class="text-xl font-medium my-4">Related recipes</h3>
           <div class="flex w-full pb-10 hide-scroll-bar mt-4">
             <div class="w-1/2">
               <SinglePreview
-                :recipe="recipe"
-                :slug="key"
-                v-for="(recipe, key) in recipie.related"
+                v-for="(recipe, key) in recipe.related"
                 :key="key"
+                :slug="key"
+                :recipe="recipe"
               />
             </div>
           </div>
         </div>
         <div class="my-6">
-          <!-- <h6 class="font-medium text-sm">Copyright and Info</h6> -->
           <ul class="text-xs text-gray-800">
-            <li>{{ $t('createdby') }} {{ recipie.creator }}</li>
+            <li>{{ $t('createdby') }} {{ recipe.creator }}</li>
             <li>Text <a href="">CC BY SA 4.0</a></li>
             <li>
               {{ $t('imageby') }}
-              <a :href="recipie.image.creator_url">{{
-                recipie.image.creator
-              }}</a>
+              <a :href="recipe.image.creator_url">{{ recipe.image.creator }}</a>
               {{ $t('licensedunder') }}
-              <a href="">{{ recipie.image.license }}</a>
+              <a href="">{{ recipe.image.license }}</a>
             </li>
           </ul>
           <p></p>
@@ -325,18 +323,19 @@
 /* eslint-disable require-await */
 export default {
   async asyncData({ params, i18n }) {
-    const slug = params.recipe // When calling /abc the slug will be "abc"
-    const recipie = await fetch(
+    const slug = params.recipe
+    const recipe = await fetch(
       'https://recipes.simonduerr.eu/recipes/' +
         params.recipe +
         '/' +
         i18n.locale +
         '/'
     ).then((res) => res.json())
-    const ingredientIds = Object.keys(recipie.ingredientIds).map(Number)
-    const ingredients = recipie.ingredientIds
-    const nPersons = recipie.defaultPersons
-    return { slug, recipie, nPersons, ingredientIds, ingredients }
+    const ingredientIds = Object.keys(recipe.ingredientIds).map(Number)
+    const ingredients = recipe.ingredientIds
+    const nPersons = recipe.defaultPersons
+    const nRelated = recipe.related.length
+    return { slug, recipe, nPersons, ingredientIds, ingredients, nRelated }
   },
   data() {
     return {
@@ -349,13 +348,13 @@ export default {
       return this.$store.state.selectedIngredients
     },
     CommonIngredients() {
-      // return this.selectedItems.some((item) =>
-      //   this.ingredientIds.includes(item)
-      // )
       return this.ingredientIds.filter((item) =>
         this.selectedItems.includes(item)
       )
     },
+  },
+  mounted() {
+    this.nPersons = this.recipe.defaultPersons
   },
   methods: {
     formatTime(time) {
@@ -370,9 +369,10 @@ export default {
         this.nPersons = this.nPersons + step
       }
     },
-  },
-  mounted() {
-    this.nPersons = this.recipie.defaultPersons
+    goBack() {
+      // this should probably be a bit smarter
+      this.$router.go(-1)
+    },
   },
 }
 </script>

@@ -21,7 +21,7 @@ export const actions = {
         (item) => ingredients[item].ingredient.id
       )
       state.commit('setSelectedIngredients', ids)
-      state.dispatch('getRecipes')
+      state.dispatch('updateRecipes')
     }
   },
   async getRecipes(state) {
