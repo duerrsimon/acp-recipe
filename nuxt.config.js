@@ -1,11 +1,6 @@
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-
-  // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
-  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'La Mule recettes',
     meta: [
@@ -15,34 +10,20 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }],
   },
-
-  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: ['~/plugins/vue-awesome-countdown.js', {
     src: '~/plugins/vuex-persist',
     mode: 'client'
   }
 ],
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     'nuxt-use-sound',
   ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     'nuxt-i18n',
   ],
@@ -113,11 +94,7 @@ export default {
       },
     },
   },
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
-
-  //vue sound config
   sound: {
     back: {
       src: '/250629__kwahmah-02__alarm1.mp3',
@@ -126,7 +103,6 @@ export default {
       },
     },
   },
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
       lang: 'fr',
@@ -138,7 +114,5 @@ export default {
       source:'/static/icon.png'
     }
   },
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 }
