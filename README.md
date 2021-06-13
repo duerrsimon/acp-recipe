@@ -3,7 +3,7 @@
 Recipe app built using Nuxt that fetches the panier of the current week and matching recipes from the server. 
 
 
-![Usage instructions](./static/installation_instructions_ad.svg)
+![Usage instructions](./static/howtouseit.png)
 
 ## Backend
 
